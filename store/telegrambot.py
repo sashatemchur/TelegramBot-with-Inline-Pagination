@@ -19,6 +19,8 @@ last_product = 10
 
 @bot.message_handler(commands=['start']) 
 async def start(message):
+    
+    delete_product()
     markut_products = types.ReplyKeyboardMarkup(resize_keyboard=True)
     products = types.KeyboardButton('Products')
     markut_products.add(products)
@@ -42,7 +44,7 @@ async def text(message):
          
 @bot.callback_query_handler(func=lambda call: True)
 async def callback_worker(call):
-    global page, pages
+    global page, pages, first_product, last_product
     for a in range(len(product)):
         if call.data == product[a]:
             description_image_change = description_image_name_price()
@@ -74,41 +76,79 @@ async def callback_worker(call):
         if page < pages:
             
             page = page+1
-            first_product = first_product+10
-            last_product = last_product+10
-            #print(page, first_product, last_product)
-            #if first_product < count_id() and last_product < count_id():
-            list_products = types.InlineKeyboardMarkup(row_width=5)
-            for i in range(first_product, last_product):
+            if page == 2:
+                first_product = 10
+                last_product = 20
+                list_products = types.InlineKeyboardMarkup(row_width=5)
+                for i in range(first_product, last_product):
 
-                list_products.add(types.InlineKeyboardButton(text=f'{product[i]}', callback_data=f'{product[i]}'))
-            list_products.add(types.InlineKeyboardButton(text=f'<< 1', callback_data='first_page'),types.InlineKeyboardButton(text=f'<', callback_data='back_page'),
+                    list_products.add(types.InlineKeyboardButton(text=f'{product[i]}', callback_data=f'{product[i]}'))
+                list_products.add(types.InlineKeyboardButton(text=f'<< 1', callback_data='first_page'),types.InlineKeyboardButton(text=f'<', callback_data='back_page'),
                             types.InlineKeyboardButton(text=f'{page}/{pages}', callback_data=' '),
                             types.InlineKeyboardButton(text=f'>', callback_data='next_page'),types.InlineKeyboardButton(text=f'{pages} >>', callback_data='last_page'))
-            await bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=f"Products page {page}", reply_markup=list_products)
+                await bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=f"Products page {page}", reply_markup=list_products)
+            
+            else:
+                first_product = first_product+10
+                last_product = last_product+10
+            
+                
+                print("a = ", page, first_product, last_product)
+                #if first_product < count_id() and last_product < count_id():
+                list_products = types.InlineKeyboardMarkup(row_width=5)
+                for i in range(first_product, last_product):
+
+                    list_products.add(types.InlineKeyboardButton(text=f'{product[i]}', callback_data=f'{product[i]}'))
+                list_products.add(types.InlineKeyboardButton(text=f'<< 1', callback_data='first_page'),types.InlineKeyboardButton(text=f'<', callback_data='back_page'),
+                            types.InlineKeyboardButton(text=f'{page}/{pages}', callback_data=' '),
+                            types.InlineKeyboardButton(text=f'>', callback_data='next_page'),types.InlineKeyboardButton(text=f'{pages} >>', callback_data='last_page'))
+                await bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=f"Products page {page}", reply_markup=list_products)
 
     elif call.data == "back_page" and page != 1:
         if page > 1:
             
             page = page-1
-            first_product = first_product-10
-            last_product = last_product-10
-            #print(page, first_product, last_product)
-            #if first_product < count_id() and last_product < count_id():
-            list_products = types.InlineKeyboardMarkup(row_width=5)
-            for i in range(first_product, last_product):
-
-                list_products.add(types.InlineKeyboardButton(text=f'{product[i]}', callback_data=f'{product[i]}'))
-            list_products.add(types.InlineKeyboardButton(text=f'<< 1', callback_data='first_page'),types.InlineKeyboardButton(text=f'<', callback_data='back_page'),
+            count_last_prod = str(count_id()/10)
+            index = count_last_prod.find(".")
+            count_last_prod = count_last_prod[index+1:]
+            if count_last_prod == '0':
+                count_last_prod = 10
+                
+            if page == pages-1:
+                first_product = count_id()-int(count_last_prod)-10
+                last_product = count_id()-int(count_last_prod)
+                list_products = types.InlineKeyboardMarkup(row_width=5)
+                for i in range(first_product, last_product):   
+                    list_products.add(types.InlineKeyboardButton(text=f'{product[i]}', callback_data=f'{product[i]}'))
+                list_products.add(types.InlineKeyboardButton(text=f'<< 1', callback_data='first_page'),types.InlineKeyboardButton(text=f'<', callback_data='back_page'),
                             types.InlineKeyboardButton(text=f'{page}/{pages}', callback_data=' '),
                             types.InlineKeyboardButton(text=f'>', callback_data='next_page'),types.InlineKeyboardButton(text=f'{pages} >>', callback_data='last_page'))
-            await bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=f"Products page {page}", reply_markup=list_products)
+                await bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=f"Products page {page}", reply_markup=list_products)
+            
+            else:
+                first_product = first_product-10
+                last_product = last_product-10
+                print('b = ', page, first_product, last_product)
+                #if first_product < count_id() and last_product < count_id():
+                list_products = types.InlineKeyboardMarkup(row_width=5)
+                for i in range(first_product, last_product):   
+                    list_products.add(types.InlineKeyboardButton(text=f'{product[i]}', callback_data=f'{product[i]}'))
+                list_products.add(types.InlineKeyboardButton(text=f'<< 1', callback_data='first_page'),types.InlineKeyboardButton(text=f'<', callback_data='back_page'),
+                            types.InlineKeyboardButton(text=f'{page}/{pages}', callback_data=' '),
+                            types.InlineKeyboardButton(text=f'>', callback_data='next_page'),types.InlineKeyboardButton(text=f'{pages} >>', callback_data='last_page'))
+                await bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=f"Products page {page}", reply_markup=list_products)
     
     elif call.data == "last_page" and page != pages:
         page = pages   
         count_last_prod = str(count_id()/10)
+        print(count_last_prod)
+        index = count_last_prod.find(".")
+        count_last_prod = count_last_prod[index+1:]
+        print(count_last_prod)
+        if count_last_prod == '0':
+            count_last_prod = 10
         list_products = types.InlineKeyboardMarkup(row_width=5)
-        for i in range(count_id()-int(count_last_prod[2]), count_id()):
+        for i in range(count_id()-int(count_last_prod), count_id()):
             list_products.add(types.InlineKeyboardButton(text=f'{product[i]}', callback_data=f'{product[i]}'))
         list_products.add(types.InlineKeyboardButton(text=f'<< 1', callback_data='first_page'),types.InlineKeyboardButton(text=f'<', callback_data='back_page'),
                             types.InlineKeyboardButton(text=f'{page}/{pages}', callback_data=' '),
