@@ -1,4 +1,4 @@
-# tg-bot
+# TelegramBot-with-Inline-Pagination
 
 Це бот Telegram, написаний на Python за допомогою Django, TelegramBotAPI.
 Він має окремий файл з ORM і з самим ботом. Що може зробити бот.
