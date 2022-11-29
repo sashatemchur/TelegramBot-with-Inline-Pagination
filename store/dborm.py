@@ -1,5 +1,5 @@
 from loguru import logger
-import django, os
+import django, os, asyncio
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "store.settings")
 django.setup()
 from django.core.management.base import BaseCommand
