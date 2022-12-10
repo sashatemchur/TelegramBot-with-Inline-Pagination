@@ -10,7 +10,7 @@ os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 
 
 logger.add("bot/bot_logs/bot.log", format="{time} {level} {message}", rotation="10MB", compression="zip")
-bot = AsyncTeleBot('5619487724:AAFeBptlX1aJ9IEAFLMUXN3JZBImJ35quWk')   
+bot = AsyncTeleBot('')   
 product = name(get_products_id())
 pages = math.ceil(count_id()/10)
 page = 1
