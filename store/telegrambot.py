@@ -23,7 +23,7 @@ index_list = []
 @bot.message_handler(commands=['start']) 
 @logger.catch
 async def start(message):
-    
+    # Creates a user and starts a bot
     delete_product()
     markut_products = types.ReplyKeyboardMarkup(resize_keyboard=True)
     products = types.KeyboardButton('Products')
@@ -38,7 +38,7 @@ async def start(message):
 @bot.message_handler(content_types=['text'])
 @logger.catch
 async def text(message):
-
+    # Responds to the command that starts pagination
     delete_product()
     if message.text == 'Products' and "status" not in audit[index_list[index_list.index(str(message.chat.id)) + 1]] and audit[index_list[index_list.index(str(message.chat.id)) + 1]][0] == str(message.chat.id):
         list_products = types.InlineKeyboardMarkup(row_width=5)
@@ -58,6 +58,7 @@ async def text(message):
 @bot.callback_query_handler(func=lambda call: True)
 @logger.catch
 async def callback_worker(call):
+    # Makes call date and basic pagination
     print(call.data)
     global page, pages, first_product, last_product
     for a in range(len(product)):
@@ -278,6 +279,7 @@ async def callback_worker(call):
 
 
 while True:
+    # Runs a loop that triggers the bot and exceptions
     try:
         logger.info("Start bot")
         asyncio.run(bot.polling(non_stop=True, interval=1, timeout=0))
