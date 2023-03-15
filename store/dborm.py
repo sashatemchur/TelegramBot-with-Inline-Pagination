@@ -10,7 +10,7 @@ logger.add("bot/bot_logs/bot.log", format="{time} {level} {message}", rotation="
 
 @logger.catch
 def delete_product():
-    
+    # This function filters the database from unnecessary products
     logger.info("The (delete_product) function worked")
     product = InfoProducts.objects.all()
     product.filter(status=0).delete()
@@ -18,7 +18,7 @@ def delete_product():
     
 @logger.catch
 def get_products_id():
-    
+    # This function takes the id of the products and writes them to a list
     logger.info("The (get_products_id) function worked")
     list_id = []
     products = InfoProducts.objects.filter(status=True)
@@ -30,7 +30,7 @@ def get_products_id():
 
 @logger.catch
 def name(id):
-    
+    # This function takes the product name by id and writes them to a list
     logger.info("The (name) function worked")
     list_product_name  = []
     for i in range(len(get_products_id())):
@@ -42,7 +42,7 @@ def name(id):
 
 @logger.catch
 def description_image_name_price(id):
-    
+    # This function takes the product description by id and writes them to a list
     logger.info("The (description_image_name_price) function worked")
     description_image_name_price  = []
     for i in range(len(get_products_id())):
@@ -57,7 +57,7 @@ def description_image_name_price(id):
 
 @logger.catch
 def count_id():
-    
+    # This function counts all id in the database
     logger.info("The (count_id) function worked")
     product = InfoProducts.objects.filter(status=True)
     return len(product)
